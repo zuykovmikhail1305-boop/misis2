@@ -1,5 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 from app.schemas import CreatePlanRequest, UpdatePlanRequest, TaskProgressRequest
 from app.fake_llm import generate_fake_learning_plan
@@ -23,10 +25,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Mount static files and templates
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
+
 
 @app.get("/")
-def root():
-    return {"message": "Backend is running"}
+def root(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
 @app.post("/plans")
