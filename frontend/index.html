@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Learning Planner</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI Learning Planner</h1>
+            <p class="subtitle">Создайте свой персональный план обучения</p>
+        </header>
+
+        <main>
+            <!-- Форма создания плана -->
+            <section class="card form-section">
+                <h2>Создать новый план</h2>
+                <form id="planForm">
+                    <div class="form-group">
+                        <label for="goal">Цель обучения</label>
+                        <input type="text" id="goal" name="goal" placeholder="Например: изучить Python для анализа данных" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="level">Уровень подготовки</label>
+                        <select id="level" name="level" required>
+                            <option value="">Выберите уровень</option>
+                            <option value="beginner">Новичок</option>
+                            <option value="intermediate">Средний</option>
+                            <option value="advanced">Продвинутый</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="duration_weeks">Длительность (недель)</label>
+                            <input type="number" id="duration_weeks" name="duration_weeks" min="1" max="52" value="4" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="time_per_week">Часов в неделю</label>
+                            <input type="number" id="time_per_week" name="time_per_week" min="1" max="40" value="5" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="preferred_format">Предпочтительный формат</label>
+                        <select id="preferred_format" name="preferred_format" required>
+                            <option value="">Выберите формат</option>
+                            <option value="video">Видеоуроки</option>
+                            <option value="text">Текстовые материалы</option>
+                            <option value="interactive">Интерактивные упражнения</option>
+                            <option value="mixed">Смешанный формат</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Создать план</button>
+                </form>
+            </section>
+
+            <!-- Список планов -->
+            <section class="card plans-section">
+                <h2>Мои планы обучения</h2>
+                <div id="plansList" class="plans-grid">
+                    <p class="loading">Загрузка планов...</p>
+                </div>
+            </section>
+
+            <!-- Детали плана (модальное окно) -->
+            <div id="planModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-btn">&times;</span>
+                    <div id="planDetails"></div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 AI Learning Planner. Все права защищены.</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
