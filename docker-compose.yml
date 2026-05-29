@@ -1,0 +1,32 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      LOCAL_DB_PATH: /app/data/plans.json
+    volumes:
+      - ./data:/app/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  web:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    ports:
+      - "127.0.0.1:${WEB_PORT:-1234}:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

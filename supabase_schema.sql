@@ -12,13 +12,3 @@ create table if not exists learning_plans (
   plan_json jsonb not null,
   created_at timestamptz default now()
 );
-create table if not exists task_progress (
-  id uuid primary key default gen_random_uuid(),
-  plan_id uuid not null references learning_plans(id) on delete cascade,
-  week_number int not null,
-  task_index int not null,
-  is_completed boolean not null default false,
-  created_at timestamptz default now(),
-  updated_at timestamptz default now(),
-  unique(plan_id, week_number, task_index)
-);

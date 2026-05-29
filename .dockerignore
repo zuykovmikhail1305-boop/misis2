@@ -1,5 +1,9 @@
-.venv
+venv/
+.venv/
 .env
-.git
-__pycache__
+__pycache__/
 *.pyc
+.pytest_cache/
+tests/
+.git/
+.claude/

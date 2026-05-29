@@ -132,6 +132,39 @@ header h1 {
     transform: translateY(0);
 }
 
+.btn-primary:disabled {
+    opacity: 0.7;
+    cursor: wait;
+    transform: none;
+}
+
+.form-status {
+    margin-top: 16px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    min-height: 1.25rem;
+}
+
+.form-status--loading {
+    background: var(--primary-light);
+    color: var(--text-dark);
+    border: 1px solid var(--primary-medium);
+}
+
+.form-status--error {
+    background: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}
+
+.form-status--success {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+}
+
 /* Plans Grid */
 .plans-grid {
     display: grid;
@@ -145,13 +178,219 @@ header h1 {
     padding: 20px;
     border: 2px solid var(--primary-medium);
     transition: all 0.3s ease;
-    cursor: pointer;
+    display: flex;
+    flex-direction: column;
 }
 
 .plan-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 25px var(--shadow);
     border-color: var(--primary-accent);
+}
+
+.btn-open-plan {
+    display: inline-block;
+    margin-top: auto;
+    text-align: center;
+    background: linear-gradient(135deg, var(--primary-accent) 0%, var(--primary-dark) 100%);
+    color: var(--white);
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-open-plan:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow);
+}
+
+.btn-secondary {
+    display: inline-block;
+    margin-top: 16px;
+    background: var(--white);
+    color: var(--primary-accent);
+    border: 2px solid var(--primary-accent);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: var(--primary-light);
+}
+
+/* Plan page */
+.header-compact {
+    text-align: left;
+    padding: 24px 28px;
+}
+
+.header-compact h1 {
+    font-size: 1.75rem;
+    margin-top: 8px;
+}
+
+.back-link {
+    color: var(--primary-accent);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.plan-page-card {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.plan-meta {
+    background: var(--primary-light);
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px 20px;
+}
+
+.plan-meta p {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.progress-block {
+    margin-bottom: 28px;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--primary-light) 0%, var(--white) 100%);
+    border-radius: 12px;
+    border: 2px solid var(--primary-medium);
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.progress-label {
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.progress-percent {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-accent);
+}
+
+.progress-track {
+    height: 14px;
+    background: var(--primary-medium);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-dark) 0%, var(--primary-accent) 100%);
+    border-radius: 999px;
+    transition: width 0.35s ease;
+}
+
+.progress-stats {
+    margin-top: 10px;
+    color: var(--text-light);
+    font-size: 0.95rem;
+}
+
+.plan-sections-title {
+    color: var(--primary-accent);
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+}
+
+.card-inner {
+    background: var(--primary-light);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid var(--primary-medium);
+}
+
+.week-title {
+    color: var(--primary-dark);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--primary-medium);
+}
+
+.plan-section h4 {
+    color: var(--text-dark);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+    margin-top: 12px;
+}
+
+.plan-section:first-of-type h4 {
+    margin-top: 0;
+}
+
+.task-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 8px 0;
+}
+
+.task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    background: var(--white);
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.task-item:hover {
+    border-color: var(--primary-medium);
+}
+
+.task-item--done .task-text {
+    text-decoration: line-through;
+    color: var(--text-light);
+}
+
+.task-checkbox {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    flex-shrink: 0;
+    accent-color: var(--primary-accent);
+    cursor: pointer;
+}
+
+.task-text {
+    flex: 1;
+    line-height: 1.5;
+}
+
+.btn-reset-progress {
+    width: 100%;
+    margin-top: 8px;
 }
 
 .plan-card h3 {

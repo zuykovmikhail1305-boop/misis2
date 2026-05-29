@@ -1,107 +1,104 @@
-# AI Learning Planner Backend
+# AI Learning Planner
 
-Backend для AI-сервиса, который строит индивидуальный учебный план.
+Full-stack приложение для генерации персональных планов обучения с помощью LLM.
 
 ## Стек
 
-- Python
-- FastAPI
-- Supabase
-- Uvicorn
+- **Frontend** — HTML/CSS/JS (статика через nginx)
+- **Backend** — FastAPI
+- **Supabase** — PostgreSQL
+- **LM Studio** — локальный LLM-сервер (модель qwen3-8b)
+- **Docker** — объединённый запуск frontend + backend
 
-## Как запустить проект
+## Структура проекта
 
-### 1. Создать виртуальное окружение
-
-```bash
-python -m venv .venv
+```
+app/              # FastAPI-бэкенд (API)
+frontend/         # Веб-интерфейс
+nginx/            # Конфиг nginx для Docker
+tests/            # Тесты
+docker-compose.yml
+Dockerfile        # Образ backend
 ```
 
-### 2. Активировать окружение
+## Запуск через Docker (рекомендуется)
 
-Windows PowerShell:
-
-```bash
-.\.venv\Scripts\Activate.ps1
-```
-
-Если PowerShell блокирует запуск скриптов:
+### 1. Настроить переменные окружения
 
 ```bash
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-.\.venv\Scripts\Activate.ps1
+cp .env.example .env
 ```
 
-### 3. Установить зависимости
+Заполните `SUPABASE_URL` и `SUPABASE_SERVICE_ROLE_KEY` в `.env`.
+
+### 2. Создать таблицу в Supabase
+
+Выполните SQL из `supabase_schema.sql` в SQL-редакторе Supabase.
+
+### 3. Запустить LM Studio
+
+Откройте LM Studio, загрузите модель `qwen/qwen3-8b` и запустите **Local Server на порту 1235** (порт 1234 занят веб-приложением).
+
+### 4. Запустить приложение
+
+```bash
+docker compose up --build
+```
+
+Откройте в браузере: [http://localhost:1234](http://localhost:1234)
+
+Swagger API: [http://localhost:1234/docs](http://localhost:1234/docs)
+
+Порт задаётся в `.env` как `WEB_PORT` (по умолчанию **1234**). Сервис слушает только **127.0.0.1**.
+
+Остановка:
+
+```bash
+docker compose down
+```
+
+## Запуск локально (без Docker)
+
+### Backend
 
 ```bash
 pip install -r requirements.txt
+uvicorn app.main:app --reload
 ```
 
-### 4. Создать `.env`
+Swagger: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 
-Создать файл `.env` по примеру `.env.example`:
+### Frontend
 
-```env
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+Откройте `frontend/index.html` через локальный HTTP-сервер и укажите в `frontend/app.js`:
+
+```js
+const API_BASE_URL = 'http://localhost:8000';
 ```
 
-### 5. Запустить backend
+Или запустите простой сервер:
 
 ```bash
-python -m uvicorn app.main:app --reload
+cd frontend
+python -m http.server 3000
 ```
 
-После запуска Swagger доступен здесь:
+## API
 
-```text
-http://127.0.0.1:8000/docs
+### `POST /plans` — создать план
+
+```json
+{
+  "goal": "Изучить Python",
+  "level": "beginner",
+  "duration_weeks": 4,
+  "time_per_week": 5,
+  "preferred_format": "practice"
+}
 ```
 
-## Endpoints
+### `GET /plans` — список всех планов
 
-### Plans
+### `GET /plans/{plan_id}` — один план по ID
 
-- `POST /plans` — создать учебный план
-- `GET /plans` — получить список планов
-- `GET /plans?user_id=user-1` — получить планы конкретного пользователя
-- `GET /plans/{plan_id}` — получить один план по id
-- `PATCH /plans/{plan_id}` — редактировать план
-- `DELETE /plans/{plan_id}` — удалить план
-
-### Progress
-
-- `POST /task-progress` — сохранить прогресс по заданию
-- `GET /plans/{plan_id}/progress` — получить прогресс по плану
-
-## Сейчас реализовано
-
-- FastAPI backend
-- подключение к Supabase
-- создание учебного плана
-- получение списка планов
-- получение одного плана по id
-- редактирование плана
-- удаление плана
-- сохранение прогресса по заданиям
-- простая привязка планов к `user_id`
-- CORS для подключения frontend
-- fake LLM генерация в `app/fake_llm.py`
-
-## Пока не реализовано
-
-- настоящая авторизация через логин/пароль
-- настоящий вызов OpenRouter вместо fake LLM
-
-## LLM-интеграция
-
-Сейчас генерация плана фейковая и находится в файле:
-
-```text
-app/fake_llm.py
-```
-
-LLM-разработчик может заменить функцию `generate_fake_learning_plan()` на реальный вызов OpenRouter.
-
-Важно: формат ответа должен остаться таким же, чтобы frontend не пришлось менять.
+Подробнее: `API_CONTRACT.md`
