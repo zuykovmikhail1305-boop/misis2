@@ -235,9 +235,38 @@ header h1 {
     margin-bottom: 8px;
 }
 
-.btn-edit-plan {
+.plan-header-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-edit-plan,
+.btn-delete-plan {
     margin-top: 0;
     white-space: nowrap;
+}
+
+.btn-danger {
+    background: var(--white);
+    color: #c62828;
+    border: 2px solid #ef5350;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-danger:hover:not(:disabled) {
+    background: #ffebee;
+}
+
+.btn-danger:disabled {
+    opacity: 0.7;
+    cursor: wait;
 }
 
 .header-compact {

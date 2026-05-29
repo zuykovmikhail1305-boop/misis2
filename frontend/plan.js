@@ -5,6 +5,7 @@ const planMain = document.getElementById('planMain');
 const planTitleEl = document.getElementById('planTitle');
 const planSubtitleEl = document.getElementById('planSubtitle');
 const editPlanBtn = document.getElementById('editPlanBtn');
+const deletePlanBtn = document.getElementById('deletePlanBtn');
 
 let currentPlan = null;
 
@@ -17,6 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (editPlanBtn) {
         editPlanBtn.href = `index.html?edit=${encodeURIComponent(planId)}`;
         editPlanBtn.hidden = false;
+    }
+    if (deletePlanBtn) {
+        deletePlanBtn.hidden = false;
+        deletePlanBtn.addEventListener('click', () => deletePlan(planId));
     }
     loadPlan(planId);
 });
@@ -47,6 +52,57 @@ async function loadPlan(planId) {
 
 function showError(message) {
     planMain.innerHTML = `<section class="card"><p class="empty">${escapeHtml(message)}</p><a href="index.html" class="btn-secondary">На главную</a></section>`;
+}
+
+async function deletePlan(planId) {
+    if (!confirm('Удалить этот план? Действие нельзя отменить.')) {
+        return;
+    }
+
+    if (deletePlanBtn) {
+        deletePlanBtn.disabled = true;
+        deletePlanBtn.textContent = 'Удаление…';
+    }
+    if (editPlanBtn) {
+        editPlanBtn.setAttribute('aria-disabled', 'true');
+        editPlanBtn.style.pointerEvents = 'none';
+        editPlanBtn.style.opacity = '0.6';
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/plans/${encodeURIComponent(planId)}`, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            let detail = 'Не удалось удалить план';
+            try {
+                const err = await response.json();
+                if (err.detail) {
+                    detail = typeof err.detail === 'string' ? err.detail : JSON.stringify(err.detail);
+                }
+            } catch (_) {}
+            throw new Error(detail);
+        }
+
+        const store = getProgressStore();
+        delete store[planId];
+        saveProgressStore(store);
+
+        window.location.href = 'index.html';
+    } catch (error) {
+        console.error(error);
+        alert(error.message || 'Не удалось удалить план.');
+        if (deletePlanBtn) {
+            deletePlanBtn.disabled = false;
+            deletePlanBtn.textContent = 'Удалить план';
+        }
+        if (editPlanBtn) {
+            editPlanBtn.removeAttribute('aria-disabled');
+            editPlanBtn.style.pointerEvents = '';
+            editPlanBtn.style.opacity = '';
+        }
+    }
 }
 
 function getProgressStore() {

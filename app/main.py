@@ -4,7 +4,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from app.schemas import CreatePlanRequest
 from app.llm import generate_learning_plan
-from app.db import save_learning_plan, get_learning_plans, get_learning_plan_by_id
+from app.db import save_learning_plan, get_learning_plans, get_learning_plan_by_id, delete_learning_plan
 
 app = FastAPI(title="AI Learning Planner API")
 app.add_middleware(
@@ -93,3 +93,21 @@ def get_plan(plan_id: str):
         "plan_json": plan["plan_json"],
         "created_at": plan["created_at"],
     }
+
+
+@app.delete("/plans/{plan_id}")
+def delete_plan(plan_id: str):
+    try:
+        deleted = delete_learning_plan(plan_id)
+    except httpx.ConnectError:
+        raise HTTPException(
+            status_code=503,
+            detail="Не удалось подключиться к Supabase. Проверьте SUPABASE_URL в .env или включите USE_LOCAL_DB=true",
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Ошибка удаления плана: {e}") from e
+
+    if not deleted:
+        raise HTTPException(status_code=404, detail=f"План {plan_id} не найден")
+
+    return {"ok": True, "id": plan_id}

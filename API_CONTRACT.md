@@ -69,3 +69,20 @@ http://127.0.0.1:8000/docs
 ## GET /plans/{plan_id}
 
 Возвращает один полный план по id.
+
+## DELETE /plans/{plan_id}
+
+Удаляет план по id.
+
+### Response
+
+```json
+{
+  "ok": true,
+  "id": "uuid"
+}
+```
+
+### Ошибки
+
+- `404` — план не найден

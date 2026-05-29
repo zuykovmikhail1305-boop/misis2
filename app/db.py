@@ -104,3 +104,21 @@ def get_learning_plan_by_id(plan_id: str):
         return result.data
     except Exception:
         return None
+
+
+def delete_learning_plan(plan_id: str) -> bool:
+    if USE_LOCAL_DB:
+        plans = _local_load()
+        filtered = [p for p in plans if p["id"] != plan_id]
+        if len(filtered) == len(plans):
+            return False
+        _local_save_all(filtered)
+        return True
+
+    result = (
+        supabase.table("learning_plans")
+        .delete()
+        .eq("id", plan_id)
+        .execute()
+    )
+    return bool(result.data)

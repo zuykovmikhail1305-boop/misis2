@@ -21,6 +21,24 @@ def test_get_plan_not_found():
     assert "не найден" in response.json()["detail"]
 
 
+def test_delete_plan_success():
+    """DELETE /plans/{id} удаляет план и возвращает ok."""
+    with patch("app.main.delete_learning_plan", return_value=True):
+        response = client.delete("/plans/test-id")
+
+    assert response.status_code == 200
+    assert response.json() == {"ok": True, "id": "test-id"}
+
+
+def test_delete_plan_not_found():
+    """DELETE /plans/{id} с несуществующим id возвращает 404."""
+    with patch("app.main.delete_learning_plan", return_value=False):
+        response = client.delete("/plans/nonexistent-id")
+
+    assert response.status_code == 404
+    assert "не найден" in response.json()["detail"]
+
+
 def test_create_plan_lm_studio_unavailable():
     """POST /plans когда LM Studio недоступен возвращает 503."""
     with patch("app.main.generate_learning_plan", side_effect=httpx.ConnectError("refused")):
