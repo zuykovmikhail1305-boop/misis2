@@ -4,6 +4,7 @@ const PROGRESS_STORAGE_KEY = 'learning-plan-progress';
 const planMain = document.getElementById('planMain');
 const planTitleEl = document.getElementById('planTitle');
 const planSubtitleEl = document.getElementById('planSubtitle');
+const editPlanBtn = document.getElementById('editPlanBtn');
 
 let currentPlan = null;
 
@@ -12,6 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!planId) {
         showError('Не указан id плана. Вернитесь на главную и выберите план.');
         return;
+    }
+    if (editPlanBtn) {
+        editPlanBtn.href = `index.html?edit=${encodeURIComponent(planId)}`;
+        editPlanBtn.hidden = false;
     }
     loadPlan(planId);
 });

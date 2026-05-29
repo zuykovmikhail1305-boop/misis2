@@ -12,8 +12,38 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (planForm) {
         planForm.addEventListener('submit', onCreatePlan);
+        const editId = new URLSearchParams(window.location.search).get('edit');
+        if (editId) {
+            loadPlanForEdit(editId);
+        }
     }
 });
+
+async function loadPlanForEdit(planId) {
+    const formSection = planForm?.closest('.form-section');
+    const formTitle = formSection?.querySelector('h2');
+    if (formTitle) formTitle.textContent = 'Редактировать план';
+    if (submitBtn) submitBtn.textContent = 'Пересоздать план';
+    setFormStatus('Загрузка параметров плана…', 'loading');
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/plans/${planId}`);
+        if (!response.ok) {
+            throw new Error('Не удалось загрузить план для редактирования');
+        }
+        const plan = await response.json();
+        document.getElementById('goal').value = plan.goal || '';
+        document.getElementById('level').value = plan.level || '';
+        document.getElementById('duration_weeks').value = plan.duration_weeks ?? 4;
+        document.getElementById('time_per_week').value = plan.time_per_week ?? 5;
+        document.getElementById('preferred_format').value = plan.preferred_format || '';
+        setFormStatus('Измените параметры и нажмите «Пересоздать план» — будет создан новый план.', '');
+        formSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (error) {
+        console.error(error);
+        setFormStatus(error.message || 'Не удалось загрузить план.', 'error');
+    }
+}
 
 function setFormStatus(message, type = '') {
     if (!formStatus) return;

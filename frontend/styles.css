@@ -226,6 +226,20 @@ header h1 {
 }
 
 /* Plan page */
+.plan-header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.btn-edit-plan {
+    margin-top: 0;
+    white-space: nowrap;
+}
+
 .header-compact {
     text-align: left;
     padding: 24px 28px;
